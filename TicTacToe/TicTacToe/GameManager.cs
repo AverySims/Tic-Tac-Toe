@@ -1,35 +1,24 @@
 ﻿namespace TicTacToe;
 
-public class GameManager
+/// <summary>
+/// A static class that manages the game state
+/// </summary>
+public static class GameManager
 {
-    static int xWins = 0;
-    static int oWins = 0;
-    static int draws = 0;
+    public static int XWins {get; private set;} = 0;
+    public static int OWins {get; private set;} = 0;
+    public static int Draws {get; private set;} = 0;
     
-    public void PrintWinResult(char[,] board)
-    {
-        char result = CheckForWin(board);
-        
-        SaveWinner(result);
-        
-        if (result == 'X')
-        {
-            Console.WriteLine("Player X wins!");
-        }
-        else if (result == 'O')
-        {
-            Console.WriteLine("Player O wins!");
-        }
-        else
-        {
-            Console.WriteLine("It's a draw!");
-        }
-    }
-
-    public static char CheckForWin(char[,] board)
+    /// <summary>
+    /// Check the board for a win condition
+    /// </summary>
+    /// <param name="board">2D array representing board state</param>
+    /// <returns>The player who met the win condition OR returns 'D' if draw condition is met</returns>
+    public static char CheckWinCondition(char[,] board)
     {
         char[] players = { 'X', 'O' };
-
+        
+        // Individual players are checked for a win
         foreach (char player in players)
         {
             // Check rows and columns for a win
@@ -65,28 +54,60 @@ public class GameManager
         return 'D'; // Draw
     }
     
+    /// <summary>
+    /// Handles printing the result of the match
+    /// </summary>
+    /// <param name="board">2D array representing board state</param>
+    public static void PrintMatchResult(char[,] board)
+    {
+        // Check the board for a win condition
+        char result = CheckWinCondition(board);
+        switch (result)
+        {
+            case 'X':
+                Console.WriteLine("Player X wins!");
+                break;
+            case 'O':
+                Console.WriteLine("Player O wins!");
+                break;
+            case 'D':
+                Console.WriteLine("It's a draw!");
+                break;
+            default:
+                break;
+        }
+        SaveWinner(result);
+    }
+    
+    /// <summary>
+    /// Add a win or draw to the appropriate counter
+    /// </summary>
+    /// <param name="winner">The win condition of the match</param>
     public static void SaveWinner(char winner)
     {
         switch (winner)
         {
             case 'X':
-                xWins++;
+                XWins++;
                 break;
             case 'O':
-                oWins++;
+                OWins++;
                 break;
             case 'D':
-                draws++;
+                Draws++;
                 break;
             default:
                 break;
         }
     } 
     
+    /// <summary>
+    /// Prints the total number of wins and draws
+    /// </summary>
     public static void PrintScores()
     {
-        Console.WriteLine($"X wins: {xWins}");
-        Console.WriteLine($"O wins: {oWins}");
-        Console.WriteLine($"Draws: {draws}");
+        Console.WriteLine($"X wins: {XWins}");
+        Console.WriteLine($"O wins: {OWins}");
+        Console.WriteLine($"Draws: {Draws}");
     }
 }
