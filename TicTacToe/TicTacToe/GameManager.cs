@@ -1,12 +1,12 @@
 ﻿namespace TicTacToe;
 
-public class GameInstance
+public class GameManager
 {
     static int xWins = 0;
     static int oWins = 0;
     static int draws = 0;
     
-    public void PrintResults(char[,] board)
+    public void PrintWinResult(char[,] board)
     {
         char result = CheckForWin(board);
         
@@ -83,7 +83,7 @@ public class GameInstance
         }
     } 
     
-    public static void PrintScore()
+    public static void PrintScores()
     {
         Console.WriteLine($"X wins: {xWins}");
         Console.WriteLine($"O wins: {oWins}");

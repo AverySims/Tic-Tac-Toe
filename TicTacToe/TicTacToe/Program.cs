@@ -10,8 +10,8 @@ internal class Program
 	static bool _loopMain = true;
 	static void	Main(string[] args)
 	{
-		GameInstance game = new GameInstance();
-		AsciiClass ascii = new AsciiClass();
+		GameManager game = new GameManager();
+		BoardManager ascii = new BoardManager();
 		
 		RunMatches(ascii, 999999);
 		Console.ReadLine();
@@ -25,7 +25,7 @@ internal class Program
 			
 			// Print the result of the game
 			Console.WriteLine();
-			game.PrintResults(currentBoard);
+			game.PrintWinResult(currentBoard);
 			
 			Console.WriteLine();
 			Console.WriteLine("Use your number pad to play.");
@@ -40,7 +40,7 @@ internal class Program
 		}
 	}
 
-	private static void RunMatches(AsciiClass ascii, int matches = 100)
+	private static void RunMatches(BoardManager ascii, int matches = 100)
 	{
 		for (int i = 0; i < matches; i++)
 		{
@@ -48,8 +48,8 @@ internal class Program
 			ascii.ResetBoard(ref currentBoard);
 			ascii.RandomizeBoard(ref currentBoard);
 
-			GameInstance.SaveWinner(GameInstance.CheckForWin(currentBoard));
+			GameManager.SaveWinner(GameManager.CheckForWin(currentBoard));
 		}
-		GameInstance.PrintScore();
+		GameManager.PrintScores();
 	}
 }

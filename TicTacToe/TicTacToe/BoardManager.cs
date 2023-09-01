@@ -1,6 +1,6 @@
 ﻿namespace TicTacToe;
 
-public class AsciiClass
+public class BoardManager
 {
 	public void PrintAsciiBoard(char[,] n)
 	{
