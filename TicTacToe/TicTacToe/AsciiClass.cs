@@ -37,7 +37,7 @@ public class AsciiClass
 		{
 			for (int col = 0; col < n.GetLength(1); col++)
 			{
-				n[row, col] = random.Next(0, 6) >= 3 ? 'X' : 'O';
+				n[row, col] = random.Next(-1, 1) != 0 ? 'X' : 'O';
 			}
 		}
 	}
