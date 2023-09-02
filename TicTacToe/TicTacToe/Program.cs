@@ -69,6 +69,7 @@ internal class Program
 		ConsoleHelper.SelectEndingAction(out _loopGame);
 	}
 
+	// TODO: Complete the function to allow the user to select an action
 	static void SelectEndingAction()
 	{
 		Console.WriteLine("Choose what happens next:");
