@@ -52,7 +52,7 @@ internal class Program
 				}
 				else
 				{
-					EndTurn();
+					EndTurn(Player1, Opponent1);
 				}
 			}
 		}
@@ -81,8 +81,7 @@ internal class Program
 		
 		SelectEndingAction();
 	}
-
-	// TODO: Complete the function to allow the user to select an action
+	
 	static void SelectEndingAction()
 	{
 		bool validSelection = false;
@@ -131,16 +130,9 @@ internal class Program
 			OpponentChar = 'O';
 	}
 
-	static void PrintPositionLayout()
+	static void EndTurn(Player player1, Player player2)
 	{
-		Console.WriteLine(" 7   8   9 \n\n" +
-		                  " 4   5   6 \n\n" +
-		                  " 1   2   3 ");
-	}
-
-	static void EndTurn()
-	{
-		ActivePlayer = ActivePlayer == Player1 ? Opponent1 : Player1;
+		ActivePlayer = ActivePlayer == player1 ? player2 : player1;
 	}
 	
 	/// <summary>
@@ -152,16 +144,17 @@ internal class Program
 	{
 		// Create a dummy board to test with
 		char[,] dummyBoard = new char[3,3];
-		
+		Player player1 = new Player('X');
+		Player player2 = new Player('O');
+		Player currentPlayer = player1;
 		// Run the matches
 		for (int i = 0; i < matchCount; i++)
 		{
 			// Reset the board to empty spaces, then randomize it
 			board.ResetBoard(ref dummyBoard);
-			board.RandomizeBoard(ref dummyBoard, PlayerChar, OpponentChar);
+			board.RandomizeBoard(ref dummyBoard, player1, player2);
 
-			GameManager.SaveWinner(GameManager.CheckWinCondition(dummyBoard, PlayerChar, OpponentChar), PlayerChar,
-				OpponentChar);
+			GameManager.CheckWinCondition(dummyBoard, currentPlayer);
 		}
 		GameManager.PrintScores(PlayerChar, OpponentChar);
 	}

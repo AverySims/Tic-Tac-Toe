@@ -5,8 +5,9 @@ namespace TicTacToe;
 
 public class Player
 {
-	public char Symbol { get; set; }
+	public int wins = 0;
 	
+	public char Symbol { get; set; }
 	public Player(char symbol)
 	{
 		Symbol = symbol;

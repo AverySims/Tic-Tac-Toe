@@ -18,12 +18,18 @@ public class BoardManager
 		string[] board1 = {a, d, b, d, c};
 		
 		Console.WriteLine("Look at your numpad to see the board positions.");
-		
 		ConsoleHelper.PrintBlank();
 		foreach (var row in board1)
 		{
 			Console.WriteLine(row);
 		}
+	}
+	
+	public static void PrintLayout()
+	{
+		Console.WriteLine(" 7   8   9 \n\n" +
+		                  " 4   5   6 \n\n" +
+		                  " 1   2   3 ");
 	}
 	
 	/// <summary>
@@ -43,20 +49,20 @@ public class BoardManager
 	}
 	
 	/// <summary>
-	/// Randomize the board to X's and O's
+	/// Randomize the board to Player 1 and Player 2 symbols
 	/// </summary>
 	/// <param name="board">Reference to a 2D array representing board state</param>
 	/// <param name="p1">Representation of player 1</param>>
 	/// <param name="p2">Representation of player 2</param>>
-	public void RandomizeBoard(ref char[,] board, char p1, char p2)
+	public void RandomizeBoard(ref char[,] board, Player p1, Player p2)
 	{
-		// Randomize the board to X's and O's
+		// Randomize the board to X's and O's ()
 		Random random = new Random();
 		for (int row = 0; row < board.GetLength(0); row++)
 		{
 			for (int col = 0; col < board.GetLength(1); col++)
 			{
-				board[row, col] = random.Next(-1, 1) != 0 ? p1 : p2;
+				board[row, col] = random.Next(-1, 1) != 0 ? p1.Symbol : p2.Symbol;
 			}
 		}
 	}
