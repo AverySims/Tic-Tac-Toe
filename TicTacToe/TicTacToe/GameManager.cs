@@ -55,6 +55,40 @@ public static class GameManager
         return 'D'; // Draw
     }
     
+    public static Player CheckWinCondition(char[,] board, Player player)
+    {
+        // Check rows and columns for a win
+        for (int i = 0; i < 3; i++)
+        {
+            if ((board[i, 0] == player.Symbol && board[i, 1] == player.Symbol && board[i, 2] == player.Symbol) ||
+                (board[0, i] == player.Symbol && board[1, i] == player.Symbol && board[2, i] == player.Symbol))
+            {
+                return player;
+            }
+        }
+
+        // Check diagonals for a win
+        if ((board[0, 0] == player.Symbol && board[1, 1] == player.Symbol && board[2, 2] == player.Symbol) ||
+            (board[0, 2] == player.Symbol && board[1, 1] == player.Symbol && board[2, 0] == player.Symbol))
+        {
+            return player;
+        }
+        
+        // Check for a draw
+        for (int row = 0; row < 3; row++)
+        {
+            for (int col = 0; col < 3; col++)
+            {
+                if (board[row, col] != ' ')
+                {
+                    return null; // Game is still ongoing
+                }
+            }
+        }
+        
+        return new Player('D'); // Draw
+    }
+    
     /// <summary>
     /// Handles printing the result of the match
     /// </summary>

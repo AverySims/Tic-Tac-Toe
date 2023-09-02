@@ -8,8 +8,8 @@ internal class Program
 	public static char PlayerChar { get; private set; }
 	public static char OpponentChar { get; private set; }
 	
-	public static Player? Player { get; private set; }
-	public static PlayerBot? Opponent { get; private set; }
+	public static Player? Player1 { get; private set; }
+	public static PlayerBot? Opponent1 { get; private set; }
 	public static Player? ActivePlayer { get; private set; }
 	
 	private static char[,] _currentBoard = new char[3,3];
@@ -24,37 +24,62 @@ internal class Program
 		while (_loopMain)
 		{
 			InitializePlayerSymbol();
-			Player = new Player(PlayerChar);
-			ActivePlayer = Player;
+			Player1 = new Player(PlayerChar);
+			ActivePlayer = Player1;
 			
 			InitializeOpponentSymbol();
-			Opponent = new PlayerBot(OpponentChar, 2);
+			Opponent1 = new PlayerBot(OpponentChar, 0.5);
 			
 			board.ResetBoard(ref _currentBoard);
+			
+			_loopGame = true;
+			
 			while (_loopGame)
 			{
+				bool gameOver = false;
+				
 				Console.Clear();
 				board.PrintAsciiBoard(_currentBoard);
 				
 				ConsoleHelper.PrintBlank();
-				PrintPositionLayout();
-				
 				await ActivePlayer.Play(_currentBoard);
 				
-				//if (GameManager.CheckWinCondition(_currentBoard,))
-
-				EndTurn();
-
+				Player winner = GameManager.CheckWinCondition(_currentBoard, ActivePlayer);
+				
+				if (winner != null)
+				{
+					gameOver = true;
+					
+				}
+				else
+				{
+					EndTurn();
+				}
 			}
 		}
 	}
+
+	/*
+	 * 
+	static void MatchResult()
+	{
+		if (winner.Symbol == 'D')
+		{
+			Console.WriteLine("Draw!");
+			break;
+		}
+					
+		Console.WriteLine($"{winner.Symbol} wins!");
+		Console.ReadLine();
+	}
+	 */
 	
 	/// <summary>
 	/// Initializes the player's symbol to any single character
 	/// </summary>
 	static void InitializePlayerSymbol()
 	{
-		Console.Write("Choose your symbol (e.g., 'X', 'O', '$'): ");
+		Console.Write("Choose your symbol (e.g., 'X', 'O', '!'): ");
 		PlayerChar = GenericReadLine.TryReadLine<char>();
 	}
 	
@@ -64,65 +89,22 @@ internal class Program
 	static void InitializeOpponentSymbol()
 	{
 		if (PlayerChar.ToString().ToUpper() == "O")
-		{
 			OpponentChar = 'X';
-		}
 		else
-		{
 			OpponentChar = 'O';
-		}
 	}
-	
-	/* 
-	static void PlayMove()
-	{
-		ConsoleHelper.PrintBlank();
-		Console.Write($"{ActivePlayer.Symbol}'s turn. Enter a number: ");
-		while (true)
-		{
-			int position = GenericReadLine.TryReadLine<int>();
-			if (position > 0 && position < 10)
-			{
-				// Assigning the row and column to match a number pad's layout
-				 // 7 8 9
-				 // 4 5 6
-				 // 1 2 3 
-	
-				int row = 2 - (position - 1) / 3;
-				int col = (position - 1) % 3;
-			
-				if (_currentBoard[row, col] != PlayerChar && _currentBoard[row, col] != OpponentChar)
-				{
-					_currentBoard[row, col] = ActivePlayer.Symbol;
-					break;
-				}
-				else
-				{
-					ConsoleHelper.PrintInvalidSelection();
-				}
-			}
-			else
-			{
-				Console.Write("Please enter a number from 1 to 9: ");
-			}
-		}
-		EndTurn();
-	}
-	 */
 
 	static void PrintPositionLayout()
 	{
-		Console.WriteLine(" 7   8   9 \n" +
-		                  " 4   5   6 \n" +
+		Console.WriteLine(" 7   8   9 \n\n" +
+		                  " 4   5   6 \n\n" +
 		                  " 1   2   3 ");
 	}
 
 	static void EndTurn()
 	{
-		ActivePlayer = ActivePlayer == Player ? Opponent : Player;
+		ActivePlayer = ActivePlayer == Player1 ? Opponent1 : Player1;
 	}
-	
-	
 	
 	/// <summary>
 	/// Runs a number of random matches and prints the results
