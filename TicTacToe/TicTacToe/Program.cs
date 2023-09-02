@@ -8,6 +8,7 @@ internal class Program
 	public static char PlayerChar { get; private set; }
 	public static char OpponentChar { get; private set; }
 	public static char CurrentPlayer { get; set; }
+	public static Player ActivePlayer { get; set; }
 
 	private static char[,] _currentBoard = new char[3,3];
 
@@ -16,10 +17,14 @@ internal class Program
 	static void	Main(string[] args)
 	{
 		BoardManager board = new BoardManager();
-
+		Player player;
+		
 		while (_loopMain)
 		{
 			InitializePlayerSymbol();
+			player = new Player(PlayerChar);
+			ActivePlayer = player;
+			
 			InitializeOpponentSymbol();
 			
 			board.ResetBoard(ref _currentBoard);
@@ -31,8 +36,7 @@ internal class Program
 				ConsoleHelper.PrintBlank();
 				PrintPositionLayout();
 				PlayMove();
-				
-				GameManager.PrintMatchResult(_currentBoard, PlayerChar, OpponentChar);
+
 			}
 		}
 	}
@@ -43,11 +47,7 @@ internal class Program
 	static void InitializePlayerSymbol()
 	{
 		Console.Write("Choose your symbol (e.g., 'X', 'O', '$'): ");
-		char newSymbol = Console.ReadLine().ToCharArray()[0];
-		
-		PlayerChar = newSymbol;
-		
-		CurrentPlayer = PlayerChar;
+		PlayerChar = Console.ReadLine().ToCharArray()[0];
 	}
 	
 	/// <summary>
