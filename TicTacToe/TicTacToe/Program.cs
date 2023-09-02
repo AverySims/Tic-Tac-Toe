@@ -25,13 +25,14 @@ internal class Program
 			board.ResetBoard(ref _currentBoard);
 			while (_gameLoop)
 			{
-				// Reset the board to empty spaces, then randomize it
 				Console.Clear();
 				board.PrintAsciiBoard(_currentBoard);
-			
+				
 				ConsoleHelper.PrintBlank();
 				PrintPositionLayout();
 				PlayMove();
+				
+				GameManager.PrintMatchResult(_currentBoard, PlayerChar, OpponentChar);
 			}
 		}
 	}
