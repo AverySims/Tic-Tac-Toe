@@ -12,8 +12,10 @@ public class Player
 		Symbol = symbol;
 	}
 
-	public virtual void Play(char[,] board)
+	public virtual async Task Play(char[,] board)
 	{
+		await Task.Yield();
+		
 		Console.Write($"{Symbol}'s turn. Enter a position (1-9): ");
 		while (true)
 		{
@@ -23,14 +25,14 @@ public class Player
 				int row = AssignRow(position, true);
 				int col = AssignCollumn(position);
 			
-				if (board[row, col] != ' ')
+				if (board[row, col] == ' ')
 				{
 					board[row, col] = Symbol;
 					break;
 				}
 				else
 				{
-					ConsoleHelper.PrintInvalidSelection();
+					Console.Write("Position is already taken. Select another position: ");
 				}
 			}
 			else

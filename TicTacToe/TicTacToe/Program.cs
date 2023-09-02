@@ -7,35 +7,43 @@ internal class Program
 {
 	public static char PlayerChar { get; private set; }
 	public static char OpponentChar { get; private set; }
-	public static char CurrentPlayer { get; set; }
-	public static Player ActivePlayer { get; set; }
-
+	
+	public static Player? Player { get; private set; }
+	public static PlayerBot? Opponent { get; private set; }
+	public static Player? ActivePlayer { get; private set; }
+	
 	private static char[,] _currentBoard = new char[3,3];
 
 	static bool _loopMain = true;
-	static bool _gameLoop = true;
-	static void	Main(string[] args)
+	static bool _loopGame = true;
+	
+	static async Task Main(string[] args)
 	{
 		BoardManager board = new BoardManager();
-		Player player;
-		
+
 		while (_loopMain)
 		{
 			InitializePlayerSymbol();
-			player = new Player(PlayerChar);
-			ActivePlayer = player;
+			Player = new Player(PlayerChar);
+			ActivePlayer = Player;
 			
 			InitializeOpponentSymbol();
+			Opponent = new PlayerBot(OpponentChar, 2);
 			
 			board.ResetBoard(ref _currentBoard);
-			while (_gameLoop)
+			while (_loopGame)
 			{
 				Console.Clear();
 				board.PrintAsciiBoard(_currentBoard);
 				
 				ConsoleHelper.PrintBlank();
 				PrintPositionLayout();
-				PlayMove();
+				
+				await ActivePlayer.Play(_currentBoard);
+				
+				//if (GameManager.CheckWinCondition(_currentBoard,))
+
+				EndTurn();
 
 			}
 		}
@@ -47,7 +55,7 @@ internal class Program
 	static void InitializePlayerSymbol()
 	{
 		Console.Write("Choose your symbol (e.g., 'X', 'O', '$'): ");
-		PlayerChar = Console.ReadLine().ToCharArray()[0];
+		PlayerChar = GenericReadLine.TryReadLine<char>();
 	}
 	
 	/// <summary>
@@ -65,25 +73,27 @@ internal class Program
 		}
 	}
 	
+	/* 
 	static void PlayMove()
 	{
 		ConsoleHelper.PrintBlank();
-		Console.Write($"{CurrentPlayer}'s turn. Enter a number: ");
+		Console.Write($"{ActivePlayer.Symbol}'s turn. Enter a number: ");
 		while (true)
 		{
 			int position = GenericReadLine.TryReadLine<int>();
 			if (position > 0 && position < 10)
 			{
 				// Assigning the row and column to match a number pad's layout
-				/* 7 8 9
-				 * 4 5 6
-				 * 1 2 3 */
+				 // 7 8 9
+				 // 4 5 6
+				 // 1 2 3 
+	
 				int row = 2 - (position - 1) / 3;
 				int col = (position - 1) % 3;
 			
 				if (_currentBoard[row, col] != PlayerChar && _currentBoard[row, col] != OpponentChar)
 				{
-					_currentBoard[row, col] = CurrentPlayer;
+					_currentBoard[row, col] = ActivePlayer.Symbol;
 					break;
 				}
 				else
@@ -98,6 +108,7 @@ internal class Program
 		}
 		EndTurn();
 	}
+	 */
 
 	static void PrintPositionLayout()
 	{
@@ -108,7 +119,7 @@ internal class Program
 
 	static void EndTurn()
 	{
-		CurrentPlayer = CurrentPlayer == PlayerChar ? OpponentChar : PlayerChar;
+		ActivePlayer = ActivePlayer == Player ? Opponent : Player;
 	}
 	
 	
