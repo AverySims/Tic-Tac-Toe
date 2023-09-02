@@ -1,4 +1,6 @@
-﻿namespace TicTacToe;
+﻿using CustomConsole;
+
+namespace TicTacToe;
 
 public class BoardManager
 {
@@ -6,7 +8,7 @@ public class BoardManager
 	/// Print the board to the console with the states of each cell
 	/// </summary>
 	/// <param name="board">2D array representing board state</param>
-	public void PrintAsciiBoard(char[,] board)
+	public void PrintBoard(char[,] board)
 	{
 		string a = $" {board[0,0]} | {board[0,1]} | {board[0,2]} ";
 		string b = $" {board[1,0]} | {board[1,1]} | {board[1,2]} ";
@@ -14,7 +16,10 @@ public class BoardManager
 		string d = "---+---+---";
 
 		string[] board1 = {a, d, b, d, c};
-
+		
+		Console.WriteLine("Look at your numpad to see the board positions.");
+		
+		ConsoleHelper.PrintBlank();
 		foreach (var row in board1)
 		{
 			Console.WriteLine(row);

@@ -23,6 +23,8 @@ internal class Program
 
 		while (_loopMain)
 		{
+			Console.Clear();
+			
 			InitializePlayerSymbol();
 			Player1 = new Player(PlayerChar);
 			ActivePlayer = Player1;
@@ -37,7 +39,7 @@ internal class Program
 			while (_loopGame)
 			{
 				Console.Clear();
-				board.PrintAsciiBoard(_currentBoard);
+				board.PrintBoard(_currentBoard);
 				
 				ConsoleHelper.PrintBlank();
 				await ActivePlayer.Play(_currentBoard);
@@ -46,7 +48,7 @@ internal class Program
 
 				if (winner != null)
 				{
-					InitiateEndGame(winner);
+					InitiateEndGame(board, winner);
 				}
 				else
 				{
@@ -56,42 +58,58 @@ internal class Program
 		}
 	}
 
-	static void InitiateEndGame(Player player)
+	static void InitiateEndGame(BoardManager board, Player player)
 	{
+		Console.Clear();
+		board.PrintBoard(_currentBoard);
+		
+		ConsoleHelper.PrintBlank();
 		if (player.Symbol == 'D')
 		{
+			// Print the draw in colored text
+			Console.ForegroundColor = ConsoleColor.DarkYellow;
 			Console.WriteLine("Draw!");
-			ConsoleHelper.SelectEndingAction(out _loopGame);
+			Console.ResetColor();
+			
+			SelectEndingAction();
 			return;
 		}
-					
+		// Print the winner in colored text
+		Console.ForegroundColor = ConsoleColor.Green;
 		Console.WriteLine($"{player.Symbol} wins!");
-		ConsoleHelper.SelectEndingAction(out _loopGame);
+		Console.ResetColor();
+		
+		SelectEndingAction();
 	}
 
 	// TODO: Complete the function to allow the user to select an action
 	static void SelectEndingAction()
 	{
+		bool validSelection = false;
+		
+		ConsoleHelper.PrintBlank();
 		Console.WriteLine("Choose what happens next:");
 		ConsoleHelper.PrintBlank();
-		Console.WriteLine("1. Restart program");
-		Console.WriteLine("2. Quit program");
-	}
-	
-	/*
-	 * 
-	static void MatchResult()
-	{
-		if (winner.Symbol == 'D')
+		Console.WriteLine("1. Play again");
+		Console.WriteLine("2. Quit");
+		do
 		{
-			Console.WriteLine("Draw!");
-			break;
-		}
-					
-		Console.WriteLine($"{winner.Symbol} wins!");
-		Console.ReadLine();
+			switch (GenericReadLine.TryReadLine<int>())
+			{
+				case 1: // Restart program
+					validSelection = true;
+					_loopGame = false;
+					break;
+				case 2: // Quit program
+					validSelection = true;
+					_loopGame = false;
+					_loopMain = false;
+					break;
+				default: // Invalid selection
+					break;
+			}
+		} while (!validSelection);
 	}
-	 */
 	
 	/// <summary>
 	/// Initializes the player's symbol to any single character
