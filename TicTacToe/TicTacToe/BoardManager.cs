@@ -41,7 +41,9 @@ public class BoardManager
 	/// Randomize the board to X's and O's
 	/// </summary>
 	/// <param name="board">Reference to a 2D array representing board state</param>
-	public void RandomizeBoard(ref char[,] board)
+	/// <param name="p1">Representation of player 1</param>>
+	/// <param name="p2">Representation of player 2</param>>
+	public void RandomizeBoard(ref char[,] board, char p1, char p2)
 	{
 		// Randomize the board to X's and O's
 		Random random = new Random();
@@ -49,7 +51,7 @@ public class BoardManager
 		{
 			for (int col = 0; col < board.GetLength(1); col++)
 			{
-				board[row, col] = random.Next(-1, 1) != 0 ? 'X' : 'O';
+				board[row, col] = random.Next(-1, 1) != 0 ? p1 : p2;
 			}
 		}
 	}

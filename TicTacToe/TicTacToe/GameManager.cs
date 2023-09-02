@@ -5,18 +5,20 @@
 /// </summary>
 public static class GameManager
 {
-    public static int XWins {get; private set;} = 0;
-    public static int OWins {get; private set;} = 0;
+    public static int P1Wins {get; private set;} = 0;
+    public static int P2Wins {get; private set;} = 0;
     public static int Draws {get; private set;} = 0;
     
     /// <summary>
     /// Check the board for a win condition
     /// </summary>
     /// <param name="board">2D array representing board state</param>
+    /// <param name="p1">Representation of player 1</param>>
+    /// <param name="p2">Representation of player 2</param>>
     /// <returns>The player who met the win condition OR returns 'D' if draw condition is met</returns>
-    public static char CheckWinCondition(char[,] board)
+    public static char CheckWinCondition(char[,] board, char p1, char p2)
     {
-        char[] players = { 'X', 'O' };
+        char[] players = { p1, p2 };
         
         // Individual players are checked for a win
         foreach (char player in players)
@@ -44,13 +46,12 @@ public static class GameManager
         {
             for (int col = 0; col < 3; col++)
             {
-                if (board[row, col] != 'X' && board[row, col] != 'O')
+                if (board[row, col] != p1 && board[row, col] != p2)
                 {
                     return ' '; // Game is still ongoing
                 }
             }
         }
-
         return 'D'; // Draw
     }
     
@@ -58,56 +59,60 @@ public static class GameManager
     /// Handles printing the result of the match
     /// </summary>
     /// <param name="board">2D array representing board state</param>
-    public static void PrintMatchResult(char[,] board)
+    /// <param name="p1">Representation of player 1</param>>
+    /// <param name="p2">Representation of player 2</param>>
+    public static void PrintMatchResult(char[,] board, char p1, char p2)
     {
         // Check the board for a win condition
-        char result = CheckWinCondition(board);
-        switch (result)
+        char result = CheckWinCondition(board, p1, p2);
+        
+        if (result == p1)
         {
-            case 'X':
-                Console.WriteLine("Player X wins!");
-                break;
-            case 'O':
-                Console.WriteLine("Player O wins!");
-                break;
-            case 'D':
-                Console.WriteLine("It's a draw!");
-                break;
-            default:
-                break;
+            Console.WriteLine($"Player {p1} wins!");
         }
-        SaveWinner(result);
+        if (result == p2)
+        {
+            Console.WriteLine($"Player {p2} wins!");
+        }
+        if (result == 'D')
+        {
+            Console.WriteLine("It's a draw!");
+        }
+
+        SaveWinner(result, p1, p2);
     }
     
     /// <summary>
     /// Add a win or draw to the appropriate counter
     /// </summary>
-    /// <param name="winner">The win condition of the match</param>
-    public static void SaveWinner(char winner)
+    /// <param name="result">The win condition of the match</param>
+    /// <param name="p1">Representation of player 1</param>>
+    /// <param name="p2">Representation of player 2</param>>
+    public static void SaveWinner(char result, char p1, char p2)
     {
-        switch (winner)
+        if (result == p1)
         {
-            case 'X':
-                XWins++;
-                break;
-            case 'O':
-                OWins++;
-                break;
-            case 'D':
-                Draws++;
-                break;
-            default:
-                break;
+            Console.WriteLine($"Player {p1} wins!");
+        }
+        if (result == p2)
+        {
+            Console.WriteLine($"Player {p2} wins!");
+        }
+        if (result == 'D')
+        {
+            Console.WriteLine("It's a draw!");
         }
     } 
     
     /// <summary>
     /// Prints the total number of wins and draws
     /// </summary>
-    public static void PrintScores()
+    /// <param name="p1">Representation of player 1</param>
+    /// <param name="p2">Representation of player 2</param>
+    public static void PrintScores(char p1, char p2)
     {
-        Console.WriteLine($"X wins: {XWins}");
-        Console.WriteLine($"O wins: {OWins}");
+        Console.WriteLine($"{p1} wins: {P1Wins}");
+        Console.WriteLine($"{p2} wins: {P2Wins}");
         Console.WriteLine($"Draws: {Draws}");
     }
 }
