@@ -36,20 +36,17 @@ internal class Program
 			
 			while (_loopGame)
 			{
-				bool gameOver = false;
-				
 				Console.Clear();
 				board.PrintAsciiBoard(_currentBoard);
 				
 				ConsoleHelper.PrintBlank();
 				await ActivePlayer.Play(_currentBoard);
-				
+
 				Player winner = GameManager.CheckWinCondition(_currentBoard, ActivePlayer);
-				
+
 				if (winner != null)
 				{
-					gameOver = true;
-					
+					InitiateEndGame(winner);
 				}
 				else
 				{
@@ -59,6 +56,27 @@ internal class Program
 		}
 	}
 
+	static void InitiateEndGame(Player player)
+	{
+		if (player.Symbol == 'D')
+		{
+			Console.WriteLine("Draw!");
+			ConsoleHelper.SelectEndingAction(out _loopGame);
+			return;
+		}
+					
+		Console.WriteLine($"{player.Symbol} wins!");
+		ConsoleHelper.SelectEndingAction(out _loopGame);
+	}
+
+	static void SelectEndingAction()
+	{
+		Console.WriteLine("Choose what happens next:");
+		ConsoleHelper.PrintBlank();
+		Console.WriteLine("1. Restart program");
+		Console.WriteLine("2. Quit program");
+	}
+	
 	/*
 	 * 
 	static void MatchResult()
