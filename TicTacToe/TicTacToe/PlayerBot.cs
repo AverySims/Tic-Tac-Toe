@@ -15,6 +15,11 @@ public class PlayerBot : Player
 	
 	private readonly Random _random = new Random();
 	
+	public void ResetPlayedPositions()
+	{
+		_playedPositions.Clear();
+	}
+	
 	public override async Task Play(char[,] board)
 	{
 		Console.WriteLine($"{Symbol}'s turn. Waiting for opponent to play...");

@@ -7,10 +7,10 @@ internal class Program
 {
 	public static char PlayerChar { get; private set; }
 	public static char OpponentChar { get; private set; }
-	
-	public static Player? Player1 { get; private set; }
-	public static PlayerBot? Opponent1 { get; private set; }
-	public static Player? ActivePlayer { get; private set; }
+
+	public static Player? player1;
+	public static PlayerBot? player2;
+	public static Player? currentPlayer;
 	
 	private static char[,] _currentBoard = new char[3,3];
 
@@ -20,17 +20,24 @@ internal class Program
 	static async Task Main(string[] args)
 	{
 		BoardManager board = new BoardManager();
-
+		player1 = new Player('X');
+		player2 = new PlayerBot('O', 0.5);
+		
 		while (_loopMain)
 		{
-			Console.Clear();
+			// setting the active player
+			currentPlayer = player1;
 			
+			// resetting the bot played positions
+			player2.ResetPlayedPositions();
+			
+			// Initializing player symbols
+			Console.Clear();
 			InitializePlayerSymbol();
-			Player1 = new Player(PlayerChar);
-			ActivePlayer = Player1;
+			player1.Symbol = PlayerChar;
 			
 			InitializeOpponentSymbol();
-			Opponent1 = new PlayerBot(OpponentChar, 0.5);
+			player2.Symbol = OpponentChar;
 			
 			board.ResetBoard(ref _currentBoard);
 			
@@ -42,9 +49,9 @@ internal class Program
 				board.PrintBoard(_currentBoard);
 				
 				ConsoleHelper.PrintBlank();
-				await ActivePlayer.Play(_currentBoard);
+				await currentPlayer.Play(_currentBoard);
 
-				Player winner = GameManager.CheckWinCondition(_currentBoard, ActivePlayer);
+				Player winner = GameManager.CheckWinCondition(_currentBoard, currentPlayer);
 
 				if (winner != null)
 				{
@@ -52,32 +59,46 @@ internal class Program
 				}
 				else
 				{
-					EndTurn(Player1, Opponent1);
+					EndTurn();
 				}
 			}
 		}
 	}
-
-	static void InitiateEndGame(BoardManager board, Player player)
+	
+	/// <summary>
+	/// Handles the assignment of scores and printing of the end game screen
+	/// </summary>
+	/// <param name="board">Reference to the current board</param>
+	/// <param name="winner">Reference to the winning player</param>
+	static void InitiateEndGame(BoardManager board, Player winner)
 	{
+		GameManager.SaveWinner(ref winner);
+		
 		Console.Clear();
 		board.PrintBoard(_currentBoard);
 		
 		ConsoleHelper.PrintBlank();
-		if (player.Symbol == 'D')
+		if (winner.Symbol == 'D')
 		{
 			// Print the draw in colored text
 			Console.ForegroundColor = ConsoleColor.DarkYellow;
 			Console.WriteLine("Draw!");
 			Console.ResetColor();
 			
+			ConsoleHelper.PrintBlank();
+			GameManager.PrintScores(new[]{player1, player2});
+			
 			SelectEndingAction();
 			return;
 		}
+		
 		// Print the winner in colored text
 		Console.ForegroundColor = ConsoleColor.Green;
-		Console.WriteLine($"{player.Symbol} wins!");
+		Console.WriteLine($"{winner.Symbol} wins!");
 		Console.ResetColor();
+		
+		ConsoleHelper.PrintBlank();
+		GameManager.PrintScores(new[]{player1, player2});
 		
 		SelectEndingAction();
 	}
@@ -105,6 +126,7 @@ internal class Program
 					_loopMain = false;
 					break;
 				default: // Invalid selection
+					ConsoleHelper.PrintInvalidSelection();
 					break;
 			}
 		} while (!validSelection);
@@ -130,32 +152,8 @@ internal class Program
 			OpponentChar = 'O';
 	}
 
-	static void EndTurn(Player player1, Player player2)
+	static void EndTurn()
 	{
-		ActivePlayer = ActivePlayer == player1 ? player2 : player1;
-	}
-	
-	/// <summary>
-	/// Runs a number of random matches and prints the results
-	/// </summary>
-	/// <param name="board">The active BoardManager instance</param>
-	/// <param name="matchCount">Number of matches to run</param>
-	private static void RunMatches(BoardManager board, int matchCount = 100)
-	{
-		// Create a dummy board to test with
-		char[,] dummyBoard = new char[3,3];
-		Player player1 = new Player('X');
-		Player player2 = new Player('O');
-		Player currentPlayer = player1;
-		// Run the matches
-		for (int i = 0; i < matchCount; i++)
-		{
-			// Reset the board to empty spaces, then randomize it
-			board.ResetBoard(ref dummyBoard);
-			board.RandomizeBoard(ref dummyBoard, player1, player2);
-
-			GameManager.CheckWinCondition(dummyBoard, currentPlayer);
-		}
-		GameManager.PrintScores(PlayerChar, OpponentChar);
+		currentPlayer = currentPlayer == player1 ? player2 : player1;
 	}
 }

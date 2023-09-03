@@ -5,9 +5,7 @@
 /// </summary>
 public static class GameManager
 {
-    public static int P1Wins {get; private set;} = 0;
-    public static int P2Wins {get; private set;} = 0;
-    public static int Draws {get; private set;} = 0;
+    private static Player _matchDraw = new Player('D');
     
     /// <summary>
     /// Check the board for a win condition
@@ -39,21 +37,21 @@ public static class GameManager
         {
             for (int col = 0; col < 3; col++)
             {
-                if (board[row, col] != ' ')
+                if (board[row, col] == ' ')
                 {
                     return null; // Game is still ongoing
                 }
             }
         }
         
-        return new Player('D'); // Draw
+        return _matchDraw; // Draw
     }
     
     /// <summary>
     /// Add a win or draw to the appropriate counter
     /// </summary>
     /// <param name="winner">The player that is assigned the win</param>
-    public static void SaveWinner(Player winner)
+    public static void SaveWinner(ref Player winner)
     {
         winner.wins++;
     } 
@@ -61,12 +59,13 @@ public static class GameManager
     /// <summary>
     /// Prints the total number of wins and draws
     /// </summary>
-    /// <param name="p1">Representation of player 1</param>
-    /// <param name="p2">Representation of player 2</param>
-    public static void PrintScores(char p1, char p2)
+    /// <param name="players">Representation of active players</param>
+    public static void PrintScores(Player[] players)
     {
-        Console.WriteLine($"{p1} wins: {P1Wins}");
-        Console.WriteLine($"{p2} wins: {P2Wins}");
-        Console.WriteLine($"Draws: {Draws}");
+        foreach (var player in players)
+        {
+            Console.WriteLine($"{player.Symbol} wins: {player.wins}");
+        }
+        Console.WriteLine($"Draws: {_matchDraw.wins}");
     }
 }
