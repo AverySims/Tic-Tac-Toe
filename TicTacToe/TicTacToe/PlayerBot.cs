@@ -27,7 +27,7 @@ public class PlayerBot : Player
 		{
 			int position = _random.Next(1, 9);
 			
-			Console.WriteLine(position);
+			//Console.WriteLine(position);
 			
 			if (!_playedPositions.Contains(position))
 			{
